@@ -1,0 +1,16 @@
+{
+
+  "manifest_version": 2,
+  "name": "LD Schedule -> Google Calander",
+  "version": "1.0",
+
+  "description": "Puts your London Drugs worsk scheule into google your Google Calander",
+
+  "content_scripts": [
+    {
+      "matches": ["*://kronos.londondrugs.com/*"],
+      "js": ["ld-schedule.js"]
+    }
+  ]
+
+}
