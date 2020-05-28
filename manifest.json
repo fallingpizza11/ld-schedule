@@ -4,7 +4,16 @@
   "name": "LD Schedule -> Google Calander",
   "version": "1.0",
 
-  "description": "Puts your London Drugs worsk scheule into google your Google Calander",
+  "description": "Puts your London Drugs work scheule into google your Google Calander",
+
+
+  "browser_action":{
+    "default_icon": {
+      "32": "res/cal-icon.png"
+    },
+    "default_title": "LD Schedule",
+    "default_popup": "src/ld-popout.html"
+  },
 
   "content_scripts": [
     {
