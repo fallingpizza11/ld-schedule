@@ -8,18 +8,9 @@
 
 
   "browser_action":{
-    "default_icon": {
-      "32": "res/cal-icon.png"
-    },
+    "default_icon": "res/cal-icon.png",
     "default_title": "LD Schedule",
     "default_popup": "src/ld-popout.html"
-  },
-
-  "content_scripts": [
-    {
-      "matches": ["*://kronos.londondrugs.com/*"],
-      "js": ["ld-schedule.js"]
-    }
-  ]
+  }
 
 }
