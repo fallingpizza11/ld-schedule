@@ -11,6 +11,10 @@
     "default_icon": "res/cal-icon.png",
     "default_title": "LD Schedule",
     "default_popup": "src/ld-popout.html"
-  }
+  },
+
+  "permissions": [
+    "activeTab"
+  ]
 
 }
