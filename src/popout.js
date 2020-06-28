@@ -10,32 +10,33 @@ function checkTab(tabs) {
     let current_url = tabs[0].url
     let url_regex = /.*:\/\/kronos\.londondrugs\.com\/.*/
 
-    let p_text
+    let good_news = document.querySelector('.good-news')
+    let bad_news = document.querySelector('.bad-news')
+
+
     if(url_regex.test(current_url)) {
-        p_text = document.createTextNode('✅you are on the right website!✅')
+        //good
+        good_news.style.display = 'flex'
+        bad_news.style.display = 'none'
     }
     else if (!url_regex.test(current_url)){
-        p_text = document.createTextNode('⛔you are on the wrong website!⛔')
+        //bad
+        good_news.style.display = 'none'
+        bad_news.style.display = 'flex'
     }
     else {
-        p_text = document.createTextNode('wow something went wrong!')
+        // unknown
+        good_news.style.display = 'none'
+        bad_news.style.display = 'none'
     }
-
-    let main = document.querySelector('main')
-    let p_tag = document.createElement('p')
-    p_tag.appendChild(p_text)
-
-    main.firstElementChild.insertAdjacentElement('beforebegin', p_tag)
-
-    console.log('Current Tab URL: ' + tabs[0].url)
 }
 
 function addClickListener() {
-    let find_button = document.querySelector('button')
+    let find_button = document.querySelector('.good-button')
 
     let get_active_tabs = browser.tabs.query({currentWindow: true, active: true})
     get_active_tabs.then(checkTab, execError)
 }
 
-// this triggers a function to  listen for clicks in the popout
+// this triggers a function to listen for clicks in the popout
 document.addEventListener("DOMContentLoaded", addClickListener)
