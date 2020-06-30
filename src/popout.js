@@ -2,8 +2,22 @@ function execError(error) {
     console.log(`Error: ${error}`)
 }
 
-function oklog(ee) {
-    console.log(ee)
+function positiveValidation() {
+    console.log('Loaded Script \\^o^/')
+}
+
+function openKronos() {
+
+    window.open('https://kronos.londondrugs.com')
+}
+
+function openScript() {
+    console.log('opening script...')
+    const execute_script = browser.tabs.executeScript({
+        file: '/ld-schedule.js'
+    })
+
+    execute_script.then(positiveValidation, execError)
 }
 
 function checkTab(tabs) {
@@ -32,11 +46,15 @@ function checkTab(tabs) {
 }
 
 function addClickListener() {
-    let find_button = document.querySelector('.good-button')
+    let copy_button = document.querySelector('#good-button')
+    let kronos_button = document.querySelector('#bad-button')
+
+    kronos_button.onclick = openKronos
+    copy_button.onclick = openScript
 
     let get_active_tabs = browser.tabs.query({currentWindow: true, active: true})
     get_active_tabs.then(checkTab, execError)
 }
 
 // this triggers a function to listen for clicks in the popout
-document.addEventListener("DOMContentLoaded", addClickListener)
+document.addEventListener('DOMContentLoaded', addClickListener)
