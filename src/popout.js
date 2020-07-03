@@ -24,14 +24,20 @@ function checkTab(tabs) {
     let current_url = tabs[0].url
     let url_regex = /.*:\/\/kronos\.londondrugs\.com\/.*/
 
+    /** @type {HTMLElement} */
     let good_news = document.querySelector('.good-news')
+    /** @type {HTMLElement} */
     let bad_news = document.querySelector('.bad-news')
+
+    // querySelector only returns an Element object not and HTMLElement
+    // it needs to be typed to get intellisense to autocomplete stuff
 
 
     if(url_regex.test(current_url)) {
         //good
         good_news.style.display = 'flex'
         bad_news.style.display = 'none'
+
     }
     else if (!url_regex.test(current_url)){
         //bad
