@@ -1,0 +1,18 @@
+/**
+ * callback function that runs when an observation is made on an Element
+ * @param {MutationRecord[]} mutations - list of mutations?
+ * @param {*} observer - dictionary for observer config
+ */
+const attrChanged = function(mutations, observer) {
+    console.log('something changed...')
+    
+    for(let mutation of mutations) {
+        if(mutation.type === 'attributes') {
+            console.log('an observation has been made on : ' + mutation.attributeName)
+        }
+    }
+}
+
+const observer = new MutationObserver( () => {console.log('Something has changed')} )
+observer.observe(month_btn, {attributes: true, childList: true, subtree: true})
+console.log('waiting for change...');

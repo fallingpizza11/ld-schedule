@@ -7,7 +7,7 @@ console.log('script has been loaded!')
 // constants for the name of the classes / selectors in case they change
 const frame_name = '.krn-widget-iframe'
 const shift_event_name = 'shift-event'
-const month_btn_id = 'employeecalendar.actions.switchViewToMonthly_btn'
+const month_btn_id = 'employeecalendar.actions.switchViewToMonthly'
 
 // selects the iframe, then selects the html contained inside the iframe
 const html_frame = document.querySelector(frame_name)
@@ -17,28 +17,13 @@ const frame_doc = html_frame.contentDocument
 
 const month_btn = frame_doc.getElementById(month_btn_id)
 
-/**
- * callback function that runs when an observation is made on an Element
- * @param {MutationRecord[]} mutations - list of mutations?
- * @param {*} observer - dictionary for observer config
- */
-const attrChanged = function(mutations, observer) {
-    console.log('something changed...')
-    
-    for(let mutation of mutations) {
-        if(mutation.type === 'attributes') {
-            console.log('an observation has been made on : ' + mutation.attributeName)
-        }
-    }
-}
 
 const observer = new MutationObserver( () => {console.log('Something has changed')} )
 observer.observe(month_btn, {attributes: true, childList: true, subtree: true})
-console.log('waiting for change...');
+console.log('waiting for change...') 
 
-//todo: no idea why this is not working should trigger when the class changes
 
-// month_btn.click()
+month_btn.click()
 
 
 
