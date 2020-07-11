@@ -21,7 +21,6 @@ console.log('Seting up observer..')
 
 // sets up an observer to wait for changes to the month_btn element
 const observer = new MutationObserver(selectSchedulePeriod)
-//todo: this will run the function every time
 observer.observe(month_btn, {attributes: true, childList: true, subtree: true})
 console.log('waiting for change...') 
 
@@ -29,25 +28,28 @@ month_btn.click()
 console.log('click')
 
 
-/** 
+/**
+* @param {MutationRecord} mutations
 * @param {MutationObserver} observer 
 */
-function selectSchedulePeriod(observer) {
+function selectSchedulePeriod(mutations, observer) {
     console.log('‼something has changed‼');
-    //todo: this does not disconnect the observer
-    observer.disconnect
     /** @type {HTMLElement} */
     const dropdown = frame_doc.querySelector(dropdown_name)
     /** @type {HTMLElement} */
     const dropdown_btn = frame_doc.querySelector(dropdown_btn_name)
     dropdown_btn.click()
-    console.log('click')
-    
+    console.log('click 1')
 
     const currentSchedule = dropdown.children[4]
     currentSchedule.click()
-    console.log('click')
+    console.log('click 2')
 
+    observer.disconnect()
+    // :^)
+
+    //todo: figure out how to escape function, continuing this thread
+    //      without making this function super long and stuff
 }
 
 
