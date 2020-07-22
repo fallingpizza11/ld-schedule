@@ -4,6 +4,7 @@
 
 console.log('script has been loaded!')
 
+
 const week_view_name = '.fc-agendaWeek-view'
 const month_view_name = '.fc-week-view'
 
@@ -13,6 +14,9 @@ const shift_event_name = '.shift-event'
 const month_btn_id = 'employeecalendar.actions.switchViewToMonthly'
 const dropdown_btn_name = '#timeframe-selector-input'
 const dropdown_name = '.dropdown-menu'
+
+const skeleton_name = '.fc-content-skeleton'
+const container_name = '.fc-event-container'
 
 // selects the iframe, then selects the html contained inside the iframe
 const html_frame = document.querySelector(frame_name)
@@ -29,24 +33,59 @@ console.log('Seting up observer..')
 
 const fc_view = frame_doc.querySelector(week_view_name)
 
+
+/** @type {HTMLElement} */
+const dropdown = frame_doc.querySelector(dropdown_name)
+/** @type {HTMLElement} */
+const dropdown_btn = frame_doc.querySelector(dropdown_btn_name)
+dropdown_btn.click()
+console.log('click 1')
+const currentSchedule = dropdown.children[4]
+currentSchedule.click()
+console.log('click 2')
+
+month_btn.click()
+console.log('click 3')
+
 //observer for the class on the fc-view element to change
 const observer = new MutationObserver(domChanged)
 observer.observe(fc_view, {attributes: true})
 console.log('waiting for change...') 
 
-month_btn.click()
-console.log('click')
 
 function domChanged(mutations, observer) {
+
+    /** @type {HTMLElement} maybe not const tho */
+    const content_skeleton = frame_doc.querySelector(skeleton_name)
+    /** @type {HTMLElement} maybe not const tho */
+    const event_container = frame_doc.querySelector(container_name)
+
     console.log('‼view is in view‼');
 
-    const shift_events = frame_doc.querySelectorAll(shift_event_name)
+    //this if statement is useless, it dosent work, need to find another way to only run that code when the element actually loads
 
-    for (let i = 0; i < shift_events.length; i++) {
-        console.log('container' + i + 'has an index of: ' + shift_events[i].cellIndex)
+
+    if(!(frame_doc.querySelector(container_name) === null)) {
+
+        const shift_events = frame_doc.querySelectorAll(shift_event_name)
+
+
+        for (let i = 0; i < shift_events.length; i++) {
+    
+            let pos = shift_events[i].parentElement.cellIndex
+            /** @type {HTMLTableElement} */
+            let dateTable = shift_events[i].parentElement.parentElement.parentElement.previousSibling
+            /** @type {HTMLTableCellElement} */
+            let dateCell = dateTable.firstChild.cells[pos]
+    
+            let date = dateCell.getAttribute('data-date')
+    
+            let time = shift_events[i].querySelector('.event-title').innerHTML
+            console.log('you work ' + time + ' on ' + date)
+        }
+    
+        observer.disconnect()
     }
-
-    observer.disconnect()
 }
 
 
@@ -57,16 +96,6 @@ function domChanged(mutations, observer) {
 */
 function selectSchedulePeriod(mutations, observer) {
     console.log('‼something has changed‼');
-    /** @type {HTMLElement} */
-    const dropdown = frame_doc.querySelector(dropdown_name)
-    /** @type {HTMLElement} */
-    const dropdown_btn = frame_doc.querySelector(dropdown_btn_name)
-    dropdown_btn.click()
-    console.log('click 1')
-
-    const currentSchedule = dropdown.children[4]
-    currentSchedule.click()
-    console.log('click 2')
 
     observer.disconnect()
     // :^)
