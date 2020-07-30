@@ -1,7 +1,6 @@
 // ld-shedule.js
 // semicolons are for nerds
 
-
 console.log('script has been loaded!')
 
 
@@ -24,12 +23,6 @@ const html_frame = document.querySelector(frame_name)
 /** @type {HTMLDocument} */
 const frame_doc = html_frame.contentDocument
 const month_btn = frame_doc.getElementById(month_btn_id)
-console.log('Seting up observer..') 
-
-// sets up an observer to wait for changes to the month_btn element
-// const observer = new MutationObserver(selectSchedulePeriod)
-// observer.observe(month_btn, {attributes: true, childList: true, subtree: true})
-// console.log('waiting for change...') 
 
 const fc_view = frame_doc.querySelector(week_view_name)
 
@@ -47,13 +40,90 @@ console.log('click 2')
 month_btn.click()
 console.log('click 3')
 
-// todo: should add an alert to the user when this happens
-waitForKronos().then(getSchedule).catch(e => {
+waitForKronos().then(getSchedule).then(loadGoogleScript).catch(e => {
     console.error(e)
     window.alert(e)
 })
 
+const CLIENT_ID = '1075848160804-sbbgeua4j40fcern5kq34l8q4o4aakg4.apps.googleusercontent.com'
+const API_KEY = 'AIzaSyCehhqmwZv-_oa3H6dA_7N0qMQlpMhnEjk'
 
+const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"] 
+
+const SCOPE = 'https://www.googleapis.com/auth/calendar.events'
+
+
+window.gapi_onload = function() {
+    console.log('attempting to call gapi....');
+
+}
+
+function loadGoogleScript() {
+    return new Promise( (resolve, reject) => {
+        console.log('loading script....');
+        let googleScript = document.createElement('script')
+        googleScript.type = 'text/javascript'
+        googleScript.src = `https://apis.google.com/js/api.js`
+        googleScript.onload = () => {
+            console.log('loaded script!');
+            console.log('attempting to load gapi...');
+
+            setTimeout(() => {
+                console.log('setting timeout...');
+                debugger
+                if (!gapi || !gapi.client){
+                    console.error('still dosent work ´¯(`>▂<)´¯');
+                }
+                else {
+                    console.log('helllll yeahhh ~(￣▽￣)~');
+                }
+            }, 1000)
+            
+            gapi.load('client:auth2', () => {
+                console.log('loaded gapi!');
+            })
+        }
+        document.head.appendChild(googleScript)
+    })
+}
+
+function connectToCalApi() {
+
+    console.log('requesting api callback.....');
+
+    if(window.gapi) {
+        console.log('[]~(￣▽￣)~*');
+    }
+
+    else{
+        console.log('.·´¯(`>▂<)´¯`·.');
+    }
+
+    gapi.client.init({
+        apiKey: API_KEY,
+        clientId: CLIENT_ID,
+        discoveryDocs: DISCOVERY_DOCS,
+        scope: SCOPE
+    }).then(() => {
+        return gapi.client.calendar.events.list({
+            'calendarId': 'primary',
+            'timeMin': (new Date()).toISOString(),
+            'showDeleted': false,
+            'singleEvents': true,
+            'maxResults': 10,
+            'orderBy': 'startTime'
+        }).then(response => {
+            let events = response.result.items
+            
+            if(events.length > 0 ) {
+                console.log('found events!')
+            }
+            else {
+                console.log('no events found!')
+            }
+        }).catch('request failed')
+    })
+}
 
 
 function getSchedule() {
@@ -77,7 +147,7 @@ function getSchedule() {
 
 async function waitForKronos() {
 
-    var count = 9
+    var count = 0
 
     do {
 
