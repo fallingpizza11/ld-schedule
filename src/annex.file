@@ -16,3 +16,19 @@ const attrChanged = function(mutations, observer) {
 const observer = new MutationObserver( () => {console.log('Something has changed')} )
 observer.observe(month_btn, {attributes: true, childList: true, subtree: true})
 console.log('waiting for change...');
+
+
+function loadGoogleScript() {
+//     return new Promise( (resolve, reject) => {
+//         console.log('loading script....');
+//         let googleScript = document.createElement('script')
+//         googleScript.type = 'text/javascript'
+//         googleScript.src = `https://apis.google.com/js/api.js`
+//         googleScript.onload = () => {
+//             console.log('loaded script!');
+//             console.log(gapi);
+
+//         }
+//         document.head.appendChild(googleScript)
+//     })
+// }

@@ -17,6 +17,11 @@ function openScript() {
         file: '/ld-schedule.js'
     })
 
+    // const execute_gapi = browser.tabs.executeScript({
+    //     file: '/src/gapi.js'
+    // })
+
+    // execute_gapi.then(positiveValidation, execError)
     execute_script.then(positiveValidation, execError)
 }
 

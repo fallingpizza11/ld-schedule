@@ -40,11 +40,6 @@ console.log('click 2')
 month_btn.click()
 console.log('click 3')
 
-waitForKronos().then(getSchedule).then(loadGoogleScript).catch(e => {
-    console.error(e)
-    window.alert(e)
-})
-
 const CLIENT_ID = '1075848160804-sbbgeua4j40fcern5kq34l8q4o4aakg4.apps.googleusercontent.com'
 const API_KEY = 'AIzaSyCehhqmwZv-_oa3H6dA_7N0qMQlpMhnEjk'
 
@@ -52,9 +47,19 @@ const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v
 
 const SCOPE = 'https://www.googleapis.com/auth/calendar.events'
 
+/** @type {Map} */
+let schedule = new Map()
 
-window.gapi_onload = function() {
-    console.log('attempting to call gapi....');
+waitForKronos().then(() => {
+   schedule = getSchedule()
+}).then(loadGoogleScript).catch(e => {
+    console.error(e)
+    window.alert(e)
+})
+
+
+function apiPlease() {
+    gapi.load('client:auth2', connectToCalApi)
 
 }
 
@@ -66,46 +71,30 @@ function loadGoogleScript() {
         googleScript.src = `https://apis.google.com/js/api.js`
         googleScript.onload = () => {
             console.log('loaded script!');
-            console.log('attempting to load gapi...');
-
-            setTimeout(() => {
-                console.log('setting timeout...');
-                debugger
-                if (!gapi || !gapi.client){
-                    console.error('still dosent work ´¯(`>▂<)´¯');
-                }
-                else {
-                    console.log('helllll yeahhh ~(￣▽￣)~');
-                }
-            }, 1000)
-            
-            gapi.load('client:auth2', () => {
-                console.log('loaded gapi!');
-            })
+            window.wrappedJSObject.gapi.load('client:auth2', connectToCalApi)
         }
         document.head.appendChild(googleScript)
     })
 }
 
+
+function createFunction() {
+    //gapi function that calls init
+    window.gapi_onload = connectToCalApi
+}
+
 function connectToCalApi() {
 
     console.log('requesting api callback.....');
+    debugger
 
-    if(window.gapi) {
-        console.log('[]~(￣▽￣)~*');
-    }
-
-    else{
-        console.log('.·´¯(`>▂<)´¯`·.');
-    }
-
-    gapi.client.init({
+    window.wrappedJSObject.gapi.client.init({
         apiKey: API_KEY,
         clientId: CLIENT_ID,
         discoveryDocs: DISCOVERY_DOCS,
         scope: SCOPE
     }).then(() => {
-        return gapi.client.calendar.events.list({
+        return window.wrappedJSObject.gapi.client.calendar.events.list({
             'calendarId': 'primary',
             'timeMin': (new Date()).toISOString(),
             'showDeleted': false,
@@ -128,6 +117,7 @@ function connectToCalApi() {
 
 function getSchedule() {
     console.log('grabbing shift times...');
+    let schedule = new Map()
 
     const shift_events = frame_doc.querySelectorAll(shift_event_name)
     for (let i = 0; i < shift_events.length; i++) {
@@ -141,9 +131,17 @@ function getSchedule() {
         let date = dateCell.getAttribute('data-date')
 
         let time = shift_events[i].querySelector('.event-title').innerHTML
+
+        schedule.set(date, time)
         console.log('you work ' + time + ' on ' + date)
     }
+    return schedule
 }
+
+//     for (let i = 0; i < dates.length && i < times.length; i++) {
+//         schedule[i] = 
+//     }
+// }
 
 async function waitForKronos() {
 
@@ -154,7 +152,7 @@ async function waitForKronos() {
     console.log('sleeping...');
 
     // high class JS version of sleep
-    await new Promise(r => {setTimeout(r , 10)})
+    await new Promise(r => {setTimeout(r , 100)})
 
     console.log('awake!');
     
