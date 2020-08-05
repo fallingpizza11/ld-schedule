@@ -40,80 +40,21 @@ console.log('click 2')
 month_btn.click()
 console.log('click 3')
 
-const CLIENT_ID = '1075848160804-sbbgeua4j40fcern5kq34l8q4o4aakg4.apps.googleusercontent.com'
-const API_KEY = 'AIzaSyCehhqmwZv-_oa3H6dA_7N0qMQlpMhnEjk'
-
-const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"] 
-
-const SCOPE = 'https://www.googleapis.com/auth/calendar.events'
 
 /** @type {Map} */
 let schedule = new Map()
 
 waitForKronos().then(() => {
-   schedule = getSchedule()
-}).then(loadGoogleScript).catch(e => {
+   sendAPIRequest(getSchedule())
+}).catch(e => {
     console.error(e)
     window.alert(e)
 })
 
 
-function apiPlease() {
-    gapi.load('client:auth2', connectToCalApi)
-
+function sendAPIRequest(message) {
+    browser.runtime.sendMessage({schedule: message})
 }
-
-function loadGoogleScript() {
-    return new Promise( (resolve, reject) => {
-        console.log('loading script....');
-        let googleScript = document.createElement('script')
-        googleScript.type = 'text/javascript'
-        googleScript.src = `https://apis.google.com/js/api.js`
-        googleScript.onload = () => {
-            console.log('loaded script!');
-            window.wrappedJSObject.gapi.load('client:auth2', connectToCalApi)
-        }
-        document.head.appendChild(googleScript)
-    })
-}
-
-
-function createFunction() {
-    //gapi function that calls init
-    window.gapi_onload = connectToCalApi
-}
-
-function connectToCalApi() {
-
-    console.log('requesting api callback.....');
-    debugger
-
-    window.wrappedJSObject.gapi.client.init({
-        apiKey: API_KEY,
-        clientId: CLIENT_ID,
-        discoveryDocs: DISCOVERY_DOCS,
-        scope: SCOPE
-    }).then(() => {
-        return window.wrappedJSObject.gapi.client.calendar.events.list({
-            'calendarId': 'primary',
-            'timeMin': (new Date()).toISOString(),
-            'showDeleted': false,
-            'singleEvents': true,
-            'maxResults': 10,
-            'orderBy': 'startTime'
-        }).then(response => {
-            let events = response.result.items
-            
-            if(events.length > 0 ) {
-                console.log('found events!')
-            }
-            else {
-                console.log('no events found!')
-            }
-        }).catch('request failed')
-    })
-}
-
 
 function getSchedule() {
     console.log('grabbing shift times...');
@@ -137,11 +78,6 @@ function getSchedule() {
     }
     return schedule
 }
-
-//     for (let i = 0; i < dates.length && i < times.length; i++) {
-//         schedule[i] = 
-//     }
-// }
 
 async function waitForKronos() {
 

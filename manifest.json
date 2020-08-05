@@ -13,6 +13,12 @@
     "default_popup": "src/ld-popout.html"
   },
 
+  "background":{
+    "page": "src/bg-page.html"
+  },
+
+  "content_security_policy": "script-src 'self' https://apis.google.com; object-src 'self'",
+
   "permissions": [
     "activeTab"
   ]
