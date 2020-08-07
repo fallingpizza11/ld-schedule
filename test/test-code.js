@@ -36,7 +36,7 @@ function loadAndInitGAPI() {
       window.gapi.load('client:auth2', _ => {
         console.log('loaded GAPI')
         function initGAPI(){
-          if (!window.gapi || !window.gapi.client){ return reject('no window.gapi.client') }
+          if (!window.gapi || window.gapi.client){ return reject('no window.gapi.client') }
           window.gapi.client.init(gapiConfig)
           .then(_ => {
             console.log('initialised GAPI')

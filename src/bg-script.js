@@ -12,11 +12,11 @@ const SCOPE = 'https://www.googleapis.com/auth/calendar.events'
 
 let schedule = new Map()
 
-
 browser.runtime.onMessage.addListener((request, sender) => {
     if(request.schedule !== null) {
         schedule = request.schedule
-        gapi.load('client:auth2', doAPIStuff)
+        loadClient()
+        console.log(gapi);
     }
     else {
         throw new Error('schedule was corrupted')
@@ -24,11 +24,22 @@ browser.runtime.onMessage.addListener((request, sender) => {
 
 })
 
+function loadClient() {
+    gapi.load('client:auth2', doAPIStuff);
+}
+
+
+function initAPI() {
+    console.log('before timeout: gapi.client = ' + gapi.client);
+    setTimeout(doAPIStuff, 10)
+}
 
 
 function doAPIStuff() {
+    console.log('after timeout: gapi.client = ' + gapi.client);
     
     console.log('requesting api callback.....');
+    //todo implement setTimeout fix method because gapi.client is not being loaded here
 
     gapi.client.init({
         apiKey: API_KEY,
